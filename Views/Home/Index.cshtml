@@ -1,0 +1,205 @@
+﻿@using Pokemon.Models
+@using System.Collections;
+@using Newtonsoft.Json;
+@using PagedList.Mvc;
+@model PagedList.IPagedList<PokemonModel>
+<style>
+    .row.display-flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .row.display-flex > [class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+</style>
+<style>
+    .ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+            ul.pagination li a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            ul.pagination li a:hover:not(.active) {
+                background-color: #ddd;
+            }
+</style>
+
+@{
+
+    var sessionId = ViewData["sessionId"];
+
+
+    ViewBag.Title = "Gallery";
+
+    var customerid = ViewBag.customer;
+
+}
+
+<div class="navbar navbar-inverse navbar-fixed-top" style="background-color: #53bcdf">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" title="more options">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-12" style="padding-left: 24%;">
+                <h2>Welcome to Pokemon Management System</h2>
+                <div style="padding-left: 15%;">
+                    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+                    {
+
+                        <text>Search:</text> @Html.TextBox("search")
+
+                        <input type="submit" class="btnLogin" value="search" />
+                    }
+                </div>
+
+                <div style="padding-left: 63%;;">
+                    @if (ViewBag.firstname != null)
+                    {
+                        <i class="glyphicon glyphicon-user"></i> @ViewBag.firstname
+                    }
+
+                    @Html.ActionLink("Favourites", "Index", "Favourite", null, null)
+                    
+                    @if (TempData["userSession"] != null)
+                    {
+                        <i class="glyphicon glyphicon-log-out"></i>
+                        @Html.ActionLink("Logout", "Index", "Login", null, null)
+
+
+                    }
+                    else
+                    {
+                        <i class="glyphicon glyphicon-log-in"></i>
+                        @Html.ActionLink("Login", "Index", "Login", null, null)
+                    }
+                    &nbsp; &nbsp;
+
+                    @Html.ActionLink("Add Pokemon", "Index", "PokeMonUpload", null, null)
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<br />
+<br />
+<br />
+<div class="container-fluid" style="margin-top:10px">
+    <div class="row display-flex">
+        @if (ViewData["pl"] != null)
+        {
+            foreach (var product in Model)
+            {
+                <div class="col-sm-4">
+                    <table class="table table-bordered" style="border-color:transparent; box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 3px 0 rgba(0, 0, 0, 0.19);border-top-left-radius:3px;border-top-right-radius:0px;">
+
+                        <tr style="text-align:center">
+                            <td colspan="2" style="border-color:transparent;">
+                                @if (product.Image != null)
+                                {
+
+                                    var imageSrc1 = string.Format("data:image/jpg;base64,{0}", product.Image);
+                                    <img src="@imageSrc1" alt="" width="70" height="70" />
+                                    <span style="color:#337ab7">@product.Name</span><br />
+                                    <a href="/Pokeman/Index/@product.Id">details</a>
+
+
+                                    <button style="background-color:lavender;" class="btn btn-outline-success" onclick="incrementCookie(@product.Id)" name="compare">&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-heart"></i></button>
+
+                                }
+
+
+                            </td>
+                        </tr>
+
+
+                    </table>
+
+                </div>
+
+            }
+
+
+        }
+        else
+        {
+            <p>No Data found</p>
+        }
+    </div>
+    <div style="padding-left: 27%;">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new
+        {
+            page
+        }),
+             new PagedListRenderOptions()
+             {
+                 Display = PagedListDisplayMode.IfNeeded,
+                 DisplayItemSliceAndTotal = true
+             })
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    function increment(aaa) {
+        aaa = aaa + 1;
+        document.getElementById("count").innerHTML = aaa;
+        return aaa;
+    }
+</script>
+
+<script type="text/javascript">
+
+    var userValue = "";
+    function incrementCookie(name) {
+        alert(1);
+        urlVal = '/Home/AddFavourite/' + name;
+        jQuery.ajax({
+            url: urlVal,
+            type: 'GET',
+            success: function (name) {
+
+            },
+            error: function (error) {
+                $(that).remove();
+                DisplayError(error.statusText);
+            }
+        });
+
+    }
+
+
+
+
+</script>

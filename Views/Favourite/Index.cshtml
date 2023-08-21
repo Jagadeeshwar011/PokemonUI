@@ -1,0 +1,133 @@
+﻿@using Pokemon.Models
+@using System.Collections;
+
+
+<style>
+    .row.display-flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .row.display-flex > [class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+</style>
+
+@{
+
+    var sessionId = ViewData["sessionId"];
+
+
+    ViewBag.Title = "Gallery";
+
+    var customerid = ViewBag.customer;
+
+}
+<body style="background-color: lightblue">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color: #53bcdf">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" title="more options">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-12" style="text-align:right;">
+                    @if (ViewBag.firstname != null)
+                    {
+                        <i class="glyphicon glyphicon-user"></i> @ViewBag.firstname
+                    }
+                    &nbsp; &nbsp;
+                    <i class="glyphicon glyphicon-heart"></i> (@ViewBag.favourite) &nbsp;&nbsp;
+                    @if (TempData["userSession"] != null)
+                    {
+                        <i class="glyphicon glyphicon-log-out"></i>
+                        @Html.ActionLink("Logout", "Login", "Index", null, null)
+                    }
+                    else
+                    {
+                        <i class="glyphicon glyphicon-log-in"></i>
+                        @Html.ActionLink("Login", "Login", "Index", null, null)
+                    }
+
+                </div>
+            </div>
+            <div class="navbar-collapse collapse">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top:10px">
+        <div class="row display-flex">
+            @foreach (var product in (List<PokemonModel>)ViewData["pl"])
+            {
+                <div class="col-sm-4">
+                    <table class="table table-bordered" style="border-color:transparent; box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 3px 0 rgba(0, 0, 0, 0.19);border-top-left-radius:3px;border-top-right-radius:0px;">
+
+                        <tr style="text-align:center">
+                            <td colspan="2" style="border-color:transparent;">
+                                @if (product.Image != null)
+                                {
+
+                                    var imageSrc1 = string.Format("data:image/jpg;base64,{0}", product.Image);
+                                    <img src="@imageSrc1" alt="" width="70" height="70" />
+                                    <span style="color:#337ab7">@product.Name</span><br />
+                                    <p>@product.Description</p>
+                                    <button style="background-color:lavender;" class="btn btn-outline-success" onclick="incrementCookie(@product.Id)" name="compare">&nbsp;&nbsp;&nbsp;<i class="glyphiconglyphicon glyphicon-trash"></i></button>
+                                }
+
+
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </div>
+
+            }
+        </div>
+    </div>
+    </body>
+
+
+
+
+    <script>
+
+
+        function increment(aaa) {
+            aaa = aaa + 1;
+            document.getElementById("count").innerHTML = aaa;
+            return aaa;
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        var userValue = "";
+        function incrementCookie(name) {
+            alert(name);
+            urlVal = '/Favourite/AddFavourite/' + name;
+            jQuery.ajax({
+                url: urlVal,
+                type: 'GET',
+                success: function (name) {
+
+                },
+                error: function (error) {
+                    $(that).remove();
+                    DisplayError(error.statusText);
+                }
+            });
+
+        }
+
+
+
+
+    </script>

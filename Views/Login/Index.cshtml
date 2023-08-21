@@ -1,0 +1,73 @@
+﻿@model Pokemon.Models.UserModel
+
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<body style="background-color: lightblue">
+    @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="container register" >
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" title="more options">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+            </div>
+            <div class="row">
+                <div class="column">
+                    <img src="~/Images/Lucario.jpg" alt="" width="200" height="200" />
+                    <img src="~/Images/Pikachu.jpg" alt="" width="200" height="200" />
+                    <img src="~/Images/Snorlax.jpg" alt="" width="200" height="200" />
+                    <img src="~/Images/Vaporeon.jpg" alt="" width="200" height="200" />
+                    <img src="~/Images/Jiggly.jpg" alt="" width="200" height="200" />
+                </div>
+                <div class="col-md-9 register-right" style="padding-left: 38%;">
+
+                    <div class="tab-pane " id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <h3 class="register-heading">Login</h3>
+                        <div class="row register-form">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.TextBoxFor(e => e.Email, new { @class = "form-control", placeholder = "Your Email *" })
+                                    @Html.ValidationMessageFor(e => e.Email)
+                                </div>
+                                <div class="form-group">
+                                    @Html.PasswordFor(e => e.Password, new { id = "password", @class = "form-control", placeholder = "Password *" })
+                                    <span id="result"></span>
+                                    @Html.ValidationMessageFor(e => e.Password)
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="submit" class="btnLogin" value="Login" />
+                                </div>
+                                @Html.ActionLink("Register", "Index", "Register", null, null)
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+               $(function () {
+                     var msg = '@ViewData["result"]';
+                     if (msg == '1')
+                     {
+                         alert("User Details Inserted Successfully");
+                         window.location.href = "@Url.Action("Index", "UserLogin")";
+                      }
+                  });
+        </script>
+    }
+    </div>
+    }
+</body>

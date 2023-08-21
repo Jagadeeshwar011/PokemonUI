@@ -1,0 +1,92 @@
+﻿@using PagedList.Mvc
+@using Pokemon.Models
+@model PagedList.IPagedList<PokemonModel>
+@{
+    ViewBag.Title = "Student Details";
+}
+
+<style>
+    .ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {
+        display: inline;
+    }
+
+        ul.pagination li a {
+            color: black;
+            float: left;
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+        }
+
+            ul.pagination li a.active {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            ul.pagination li a:hover:not(.active) {
+                background-color: #ddd;
+            }
+</style>
+@using (Html.BeginForm())
+{
+    <center>
+        <h2>Student Details</h2>
+        <div style="border:1px solid
+red; margin-left:25%; margin-right:20%">
+            <table style="width:100%" border="1">
+               
+
+
+                <tr style="border:1px solid
+red">
+                    @if (ViewData["pl"] != null)
+                    {
+                        foreach (var product in Model)
+                        {
+                            <td colspan="2" style="border-color:transparent;">
+                                @if (product.Image != null)
+                                {
+
+                                    var imageSrc1 = string.Format("data:image/jpg;base64,{0}", product.Image);
+                                    <img src="@imageSrc1" alt="" width="70" height="70" />
+                                    <span style="color:#337ab7">@product.Name</span><br />
+                                    <a href="/Pokeman/Index/@product.Id">details</a>
+
+
+                                    <button style="background-color:lavender;" class="btn btn-outline-success" onclick="incrementCookie(@product.Id)" name="compare">&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-shopping-cart"></i></button>
+
+                                }
+
+
+                            </td>
+                        }
+
+
+                    }
+                </tr>
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new
+{
+    page
+}),
+new PagedListRenderOptions()
+{
+    Display = PagedListDisplayMode.IfNeeded,
+    DisplayItemSliceAndTotal = true
+})
+
+        </div>
+    </center>
+    <div id="container" style="margin-left: 20px">
+        <p></p>
+        <p></p>
+
+    </div>
+
+}
